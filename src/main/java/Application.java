@@ -1,63 +1,51 @@
+import DAO.CityDAO;
+import DAO.EmployeeDAO;
+import DAO.Impl.CityDAOImpl;
 import DAO.Impl.EmployeeDAOImpl;
-import Model.City;
-import Model.Employee;
+import model.City;
+import model.Employee;
+
 
 import java.sql.*;
+import java.util.List;
 
 public class Application {
 
     public static void main(String[] args) throws SQLException {
-        task2();
-    }
-    public static void task1 () throws SQLException {
-        // Создаем переменные с данными для подключения к базе
-        final String user = "postgres";
-        final String password = "";
-        final String url = "jdbc:postgresql://localhost:5432/skypro";
+        EmployeeDAO employeeDAO = new EmployeeDAOImpl();
+        CityDAO cityDAO = new CityDAOImpl();
 
-        // Создаем соединение с базой с помощью Connection
-        // Формируем запрос к базе с помощью PreparedStatement
-        try (final Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM employee WHERE id = (?)")) {
+        City city1 = new City("Саратов");
 
-            // Подставляем значение вместо wildcard
-            statement.setInt(1, 2);
+        Employee employee1 = new Employee("Стасов", "Николай", "М", 46, city1);
 
-            // Делаем запрос к базе и результат кладем в ResultSet
-            final ResultSet resultSet = statement.executeQuery();
 
-            // Методом next проверяем есть ли следующий элемент в resultSet
-            // и одновременно переходим к нему, если таковой есть
-            while (resultSet.next()) {
+        // Создаем объект
+        cityDAO.creat(city1);
+        employeeDAO.creat(employee1);
 
-                // С помощью методов getInt и getString получаем данные из resultSet
-                String firstName = "Фамилия : " + resultSet.getString("first_name");
-                String lastName = "Имя : " + resultSet.getString("last_name");
-                String gender = "Пол : " + resultSet.getString("gender");
-                int age = resultSet.getInt("age");
-                String city = "city_id: " + resultSet.getString("city_id");
+        // Получаем объект по id
+        System.out.println(cityDAO.cityById(3));
+        System.out.println(employeeDAO.employeeById(2));
 
-                // Выводим данные в консоль
-                System.out.println(firstName);
-                System.out.println(lastName);
-                System.out.println(gender);
-                System.out.println("Возраст : " + age);
-                System.out.println(city);
-
-            }
+        // Получаем полный список объектов
+        List<City> listCity = cityDAO.readAll();
+        for (City city: listCity) {
+            System.out.println(city);
         }
-    }
-    public static void task2() {
-        City city = new City(1,"Chabarovsk");
-        Employee employee = new Employee("Стасов", "Николай", "М", 46, city);
+        List<Employee> listEmployee = employeeDAO.readAll();
 
-        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
-        employeeDAO.creat(employee);
-        System.out.println(employeeDAO.employeeById(2));
-        System.out.println(employeeDAO.readAll());
-        employeeDAO.updateById(2, employee);
-        employeeDAO.deleteById(10);
-        System.out.println(employeeDAO.employeeById(2));
+        for (Employee employee : listEmployee) {
+            System.out.println(employee);
+        }
+
+        // Изменяем объект
+        cityDAO.updateById(city1);
+        employeeDAO.updateById(employee1);
+
+        // Удаляем объект
+        cityDAO.deleteById(city1);
+        employeeDAO.deleteById(employee1);
 
     }
 }

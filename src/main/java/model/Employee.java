@@ -1,19 +1,32 @@
-package Model;
+package model;
 
+import javax.persistence.*;
 import java.util.Objects;
+@Entity
+@Table(name = "employee")
 
 public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "ender")
     private String gender;
+    @Column(name = "age")
     private int age;
-    private Model.City city;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="city_id", nullable=false)
+    private City city;
+
 
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, String gender, int age, Model.City city) {
+    public Employee(String firstName, String lastName, String gender, int age, City city) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -21,7 +34,7 @@ public class Employee {
         this.city = city;
     }
 
-    public Employee(int id, String firstName, String lastName, String gender, int age, Model.City city) {
+    public Employee(int id, String firstName, String lastName, String gender, int age, City city) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,11 +47,11 @@ public class Employee {
         this.id = id;
     }
 
-    public Model.City getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(Model.City city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
