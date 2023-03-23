@@ -18,13 +18,15 @@ public class Employee {
     private String gender;
     @Column(name = "age")
     private int age;
-    @Column(name = "city")
-    private int city;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="city_id", nullable=false)
+    private City city;
+
 
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, String gender, int age, int city) {
+    public Employee(String firstName, String lastName, String gender, int age, City city) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -32,7 +34,7 @@ public class Employee {
         this.city = city;
     }
 
-    public Employee(int id, String firstName, String lastName, String gender, int age, int city) {
+    public Employee(int id, String firstName, String lastName, String gender, int age, City city) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -45,11 +47,11 @@ public class Employee {
         this.id = id;
     }
 
-    public int getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(int city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
@@ -106,7 +108,7 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id && age == employee.age && city == employee.city && firstName.equals(employee.firstName) && lastName.equals(employee.lastName) && gender.equals(employee.gender);
+        return id == employee.id && age == employee.age && firstName.equals(employee.firstName) && lastName.equals(employee.lastName) && gender.equals(employee.gender) && city.equals(employee.city);
     }
 
     @Override
